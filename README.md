@@ -24,8 +24,7 @@ Requirements:
 
 Clone this repository into your WAMP www folder:
 
-git clone https://github.com/yourusername/cybersecure-chatbot.git
-
+git clone https://github.com/AhmedAmineLoukil/cybersecurity-chatbot.git
 
 Inside the chatbot folder, create a file named .env:
 
