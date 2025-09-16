@@ -1,0 +1,95 @@
+* { box-sizing: border-box; }
+
+body { 
+  margin: 0; 
+  font-family: system-ui, sans-serif; 
+  background:#0b132b; 
+  color:#e0e1dd; 
+  font-size: 18px;   /* bumped from ~16px → 18px */
+  line-height: 1.6;  /* more readable */
+}
+
+header {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 28px;   /* larger header */
+  font-weight: 800;
+  margin: 20px 0;
+  letter-spacing: .5px;
+}
+
+.app { max-width: 820px; margin: 0 auto; padding: 16px; }
+
+/* Intro (cyber-sec vibe) */
+.intro {
+  background: linear-gradient(90deg, #0b132b 0%, #0b2545 100%);
+  border: 1px solid #143a5a;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 18px;
+  font-size: 18px; /* intro text bigger */
+}
+.intro strong { color: #5bc0be; }
+
+/* Preset question fields */
+.quick-ask { display: grid; gap: 14px; margin-bottom: 16px; }
+.qa { background:#101d3b; border:1px solid #23395d; border-radius: 10px; padding: 12px; font-size: 17px; }
+.qa label { display:block; font-size: 16px; color:#b8c1d1; margin-bottom: 6px; }
+.qa-row { display:flex; gap:8px; }
+.qa-row input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #3a506b;
+  background:#1c2541;
+  color:#e0e1dd;
+  font-size: 16px;
+}
+.ask-btn {
+  padding:12px 16px;
+  border:0;
+  border-radius:10px;
+  background:#ffd166; /* yellow accent */
+  color:#062925;
+  font-weight:800;
+  cursor:pointer;
+  font-size: 16px;
+}
+
+/* Chat area */
+.chat {
+  background:#1c2541;
+  border-radius: 12px;
+  padding: 14px;
+  min-height: 50vh;
+  max-height: 60vh;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  border: 1px solid #23395d;
+  font-size: 17px;
+}
+.msg { padding: 12px 14px; margin: 8px 0; border-radius: 10px; line-height: 1.6; white-space: pre-wrap; max-width: 75%; }
+.msg.user { background:#3a506b; align-self: flex-end; }
+.msg.assistant { background:#0b2545; align-self: flex-start; }
+
+/* Form + buttons */
+#chat-form { display:flex; gap:10px; margin-top:12px; }
+#user-input {
+  flex:1; padding:12px; border-radius: 10px; border: 1px solid #3a506b; background:#1c2541; color:#e0e1dd; font-size: 16px;
+}
+#chat-form button {
+  padding:12px 16px;
+  border:0;
+  border-radius:10px;
+  background:#5bc0be;
+  color:#062925;
+  font-weight:700;
+  cursor:pointer;
+  font-size: 16px;
+}
+#chat-form button:disabled { opacity:.6; cursor:not-allowed; }
+
+/* Clear button */
+#clear-btn { background:#ff6b6b; color:#fff; }

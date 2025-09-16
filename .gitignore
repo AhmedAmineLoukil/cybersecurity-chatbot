@@ -1,0 +1,17 @@
+# Ignore API keys and secrets
+.env
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE/editor settings
+.vscode/
+.idea/
+*.swp
+
+# Ignore WAMP/XAMPP log or temp files
+*.log
+tmp/
+logs/
+

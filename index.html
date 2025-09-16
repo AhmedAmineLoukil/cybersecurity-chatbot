@@ -1,0 +1,59 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CyberSecurity Chatbot</title>
+  <link rel="stylesheet" href="styles.css?v=4">
+  <script src="app.js?v=4" defer></script>
+</head>
+<body>
+  <div class="app">
+    <header>🛡️ CyberSecurity Chatbot</header>
+
+    <!-- Intro / theme text -->
+    <section class="intro" aria-label="Cybersecurity Introduction">
+      <p>
+        Welcome to <strong>CyberSecure Chatbot</strong>, your quick guide to staying safe online.
+        Ask anything, or use the preset questions below to learn best practices for passwords,
+        device security, and what to do if you’re hacked.
+      </p>
+    </section>
+
+    <!-- Preset question fields -->
+    <section class="quick-ask" aria-label="Preset Questions">
+      <div class="qa">
+        <label for="q1">How can I write a strong password?</label>
+        <div class="qa-row">
+          <input id="q1" type="text" value="How can I write a strong password?" readonly />
+          <button type="button" class="ask-btn" data-q="How can I write a strong password?">Ask</button>
+        </div>
+      </div>
+
+      <div class="qa">
+        <label for="q2">How can I secure my computer?</label>
+        <div class="qa-row">
+          <input id="q2" type="text" value="How can I secure my computer?" readonly />
+          <button type="button" class="ask-btn" data-q="How can I secure my computer?">Ask</button>
+        </div>
+      </div>
+
+      <div class="qa">
+        <label for="q3">How should I act if I get hacked?</label>
+        <div class="qa-row">
+          <input id="q3" type="text" value="How should I act if I get hacked?" readonly />
+          <button type="button" class="ask-btn" data-q="How should I act if I get hacked?">Ask</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chat area -->
+    <div id="chat" class="chat" role="log" aria-live="polite" aria-label="Chat transcript"></div>
+
+    <form id="chat-form" autocomplete="off" aria-label="Chat input">
+      <input id="user-input" type="text" placeholder="Type your message…" required aria-label="Your message" />
+      <button type="submit">Send</button>
+      <button type="button" id="clear-btn" aria-label="Clear chat">Clear</button>
+    </form>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
