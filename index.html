@@ -1,13 +1,14 @@
 <html lang="en">
 <head>
+  
   <meta charset="UTF-8">
   <title>CyberSecurity Chatbot</title>
   <link rel="stylesheet" href="styles.css?v=4">
-  <script src="app.js?v=4" defer></script>
 </head>
 <body>
   <div class="app">
-    <header>🛡️ CyberSecurity Chatbot</header>
+    <header>🛡️ CyberSecurity Chatbot</header><div id="status" class="status"></div>
+
 
     <!-- Intro / theme text -->
     <section class="intro" aria-label="Cybersecurity Introduction">
@@ -50,10 +51,11 @@
 
     <form id="chat-form" autocomplete="off" aria-label="Chat input">
       <input id="user-input" type="text" placeholder="Type your message…" required aria-label="Your message" />
+      <button type="button" id="micBtn">🎤</button>
       <button type="submit">Send</button>
       <button type="button" id="clear-btn" aria-label="Clear chat">Clear</button>
     </form>
   </div>
 
-  <script src="app.js" defer></script>
+  <script src="app.js?v=16" defer></script>
 </body>

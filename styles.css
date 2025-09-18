@@ -91,5 +91,41 @@ header {
 }
 #chat-form button:disabled { opacity:.6; cursor:not-allowed; }
 
+/* Voice (mic) button */
+#micBtn {
+  background:#5bc0be;
+  color:#062925;
+}
+#micBtn.recording {
+  background:#e63946;   /* red when recording */
+  color:#fff;
+}
+
 /* Clear button */
 #clear-btn { background:#ff6b6b; color:#fff; }
+.status {
+  text-align: center;
+  margin: 10px 0;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  display: none;
+}
+.status.show { display: block; }
+.status.info { background: #0b2545; color: #5bc0be; }
+.status.error { background: #2d0a0a; color: #ff6b6b; }
+
+#micBtn.recording {
+  background:#e63946;
+  color:#fff;
+  animation: pulse 1s infinite;
+}
+
+/* Input recording state */
+#user-input.recording {
+  border-color: #e63946;
+  box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.25);
+  animation: pulse 1s infinite;
+}
+#user-input.recording::placeholder { color: #fff; }
+
