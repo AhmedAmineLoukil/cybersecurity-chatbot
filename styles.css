@@ -1,21 +1,22 @@
 * { box-sizing: border-box; }
 
-body { 
-  margin: 0; 
-  font-family: system-ui, sans-serif; 
-  background:#ffffff;   /* white background */
-  color:#1f2937;        /* dark gray text */
-  font-size: 18px; 
-  line-height: 1.6; 
-}
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #ffffff;
+  color: #1f2937;
+  font-size: 18px;
+  line-height: 1.6;
 
+  padding-left: 280px;     /* 20px (gap) + 260px (sidebar) */
+}
 header {
-  font-size: 32px;
+  font-size: 36px;
   font-weight: 800;
   letter-spacing: 1px;
   text-align: center;
   padding-bottom: 8px;
-  margin-bottom: 20px;
+  margin: 20px 0;
   border-bottom: 3px solid #dbeafe; /* subtle light blue underline */
 }
 
@@ -30,7 +31,6 @@ header {
 .title-chatbot {
   color: #6b7280;  /* medium gray (same as Cyber) */
 }
-
 
 .app { max-width: 820px; margin: 0 auto; padding: 16px; }
 
@@ -117,6 +117,7 @@ header {
 /* Clear button */
 #clear-btn { background:#f87171; color:#fff; }
 
+/* Status messages */
 .status {
   text-align: center;
   margin: 10px 0;
@@ -142,3 +143,89 @@ header {
   animation: pulse 1s infinite;
 }
 #user-input.recording::placeholder { color: #b91c1c; }
+
+/* Sidebar centered content */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 20px;              /* gap from the window edge */
+  width: 260px;            /* wider sidebar */
+  height: 100%;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  padding: 16px;
+  color: #1f2937;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* center its content vertically */
+}
+
+.new-chat-btn {
+  display: block;
+  width: 100%;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #60a5fa, #3b82f6); /* light → deeper blue */
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(59,130,246,0.3); /* soft shadow */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.new-chat-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(59,130,246,0.4);
+}
+
+
+.sidebar h3 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  color: #374151;
+  text-align: center;
+}
+
+/* Resources list */
+.resources {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;  /* little space between links */
+}
+
+.resources a {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 600;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px;
+  display: block;
+  text-align: center;
+  transition: background 0.2s, border-color 0.2s;
+}
+.resources a:hover {
+  background: #e5f0ff;
+  border-color: #bfdbfe;
+}
+
+
+.app {
+  max-width: 960px;        /* bigger chat area */
+  padding: 20px;
+  margin: 0 auto;          /* center in remaining space */
+}
+
+/* Simple pulse keyframes (used above) */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
