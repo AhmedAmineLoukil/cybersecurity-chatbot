@@ -3,55 +3,68 @@
 body { 
   margin: 0; 
   font-family: system-ui, sans-serif; 
-  background:#0b132b; 
-  color:#e0e1dd; 
-  font-size: 18px;   /* bumped from ~16px → 18px */
-  line-height: 1.6;  /* more readable */
+  background:#ffffff;   /* white background */
+  color:#1f2937;        /* dark gray text */
+  font-size: 18px; 
+  line-height: 1.6; 
 }
 
 header {
-  display: block;
-  width: 100%;
-  text-align: center;
-  font-size: 28px;   /* larger header */
+  font-size: 32px;
   font-weight: 800;
-  margin: 20px 0;
-  letter-spacing: .5px;
+  letter-spacing: 1px;
+  text-align: center;
+  padding-bottom: 8px;
+  margin-bottom: 20px;
+  border-bottom: 3px solid #dbeafe; /* subtle light blue underline */
 }
+
+.title-cyber {
+  color: #6b7280;  /* medium gray */
+}
+
+.title-secure {
+  color: #3b82f6;  /* light blue accent */
+}
+
+.title-chatbot {
+  color: #6b7280;  /* medium gray (same as Cyber) */
+}
+
 
 .app { max-width: 820px; margin: 0 auto; padding: 16px; }
 
-/* Intro (cyber-sec vibe) */
+/* Intro */
 .intro {
-  background: linear-gradient(90deg, #0b132b 0%, #0b2545 100%);
-  border: 1px solid #143a5a;
+  background: linear-gradient(90deg, #f9fafb 0%, #f3f4f6 100%); /* light gray gradient */
+  border: 1px solid #d1d5db;
   border-radius: 12px;
   padding: 18px;
   margin-bottom: 18px;
-  font-size: 18px; /* intro text bigger */
+  font-size: 18px;
 }
-.intro strong { color: #5bc0be; }
+.intro strong { color: #3b82f6; } /* light blue accent */
 
 /* Preset question fields */
 .quick-ask { display: grid; gap: 14px; margin-bottom: 16px; }
-.qa { background:#101d3b; border:1px solid #23395d; border-radius: 10px; padding: 12px; font-size: 17px; }
-.qa label { display:block; font-size: 16px; color:#b8c1d1; margin-bottom: 6px; }
+.qa { background:#f3f4f6; border:1px solid #d1d5db; border-radius: 10px; padding: 12px; font-size: 17px; }
+.qa label { display:block; font-size: 16px; color:#374151; margin-bottom: 6px; }
 .qa-row { display:flex; gap:8px; }
 .qa-row input {
   flex: 1;
   padding: 12px;
   border-radius: 10px;
-  border: 1px solid #3a506b;
-  background:#1c2541;
-  color:#e0e1dd;
+  border: 1px solid #d1d5db;
+  background:#ffffff;
+  color:#1f2937;
   font-size: 16px;
 }
 .ask-btn {
   padding:12px 16px;
   border:0;
   border-radius:10px;
-  background:#ffd166; /* yellow accent */
-  color:#062925;
+  background:#60a5fa; /* light blue button */
+  color:#ffffff;
   font-weight:800;
   cursor:pointer;
   font-size: 16px;
@@ -59,7 +72,7 @@ header {
 
 /* Chat area */
 .chat {
-  background:#1c2541;
+  background:#f9fafb;
   border-radius: 12px;
   padding: 14px;
   min-height: 50vh;
@@ -67,24 +80,24 @@ header {
   overflow-y:auto;
   display:flex;
   flex-direction:column;
-  border: 1px solid #23395d;
+  border: 1px solid #d1d5db;
   font-size: 17px;
 }
 .msg { padding: 12px 14px; margin: 8px 0; border-radius: 10px; line-height: 1.6; white-space: pre-wrap; max-width: 75%; }
-.msg.user { background:#3a506b; align-self: flex-end; }
-.msg.assistant { background:#0b2545; align-self: flex-start; }
+.msg.user { background:#dbeafe; align-self: flex-end; }       /* light blue bubble */
+.msg.assistant { background:#f3f4f6; align-self: flex-start; } /* light gray bubble */
 
 /* Form + buttons */
 #chat-form { display:flex; gap:10px; margin-top:12px; }
 #user-input {
-  flex:1; padding:12px; border-radius: 10px; border: 1px solid #3a506b; background:#1c2541; color:#e0e1dd; font-size: 16px;
+  flex:1; padding:12px; border-radius: 10px; border: 1px solid #d1d5db; background:#ffffff; color:#1f2937; font-size: 16px;
 }
 #chat-form button {
   padding:12px 16px;
   border:0;
   border-radius:10px;
-  background:#5bc0be;
-  color:#062925;
+  background:#60a5fa;  /* light blue */
+  color:#ffffff;
   font-weight:700;
   cursor:pointer;
   font-size: 16px;
@@ -93,16 +106,17 @@ header {
 
 /* Voice (mic) button */
 #micBtn {
-  background:#5bc0be;
-  color:#062925;
+  background:#60a5fa;
+  color:#ffffff;
 }
 #micBtn.recording {
-  background:#e63946;   /* red when recording */
+  background:#f87171;   /* light red when recording */
   color:#fff;
 }
 
 /* Clear button */
-#clear-btn { background:#ff6b6b; color:#fff; }
+#clear-btn { background:#f87171; color:#fff; }
+
 .status {
   text-align: center;
   margin: 10px 0;
@@ -112,20 +126,19 @@ header {
   display: none;
 }
 .status.show { display: block; }
-.status.info { background: #0b2545; color: #5bc0be; }
-.status.error { background: #2d0a0a; color: #ff6b6b; }
+.status.info { background: #dbeafe; color: #1e40af; } /* light blue info */
+.status.error { background: #fee2e2; color: #b91c1c; } /* light red error */
 
 #micBtn.recording {
-  background:#e63946;
+  background:#f87171;
   color:#fff;
   animation: pulse 1s infinite;
 }
 
 /* Input recording state */
 #user-input.recording {
-  border-color: #e63946;
-  box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.25);
+  border-color: #f87171;
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.25);
   animation: pulse 1s infinite;
 }
-#user-input.recording::placeholder { color: #fff; }
-
+#user-input.recording::placeholder { color: #b91c1c; }

@@ -3,17 +3,23 @@
   
   <meta charset="UTF-8">
   <title>CyberSecurity Chatbot</title>
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
   <div class="app">
-    <header>🛡️ CyberSecurity Chatbot</header><div id="status" class="status"></div>
+  <header>
+    <span class="title-cyber">Cyber</span>
+    <span class="title-secure">Security</span>
+    <span class="title-chatbot">Chatbot</span>
+  </header>
+
+  <div id="status" class="status"></div>
 
 
     <!-- Intro / theme text -->
     <section class="intro" aria-label="Cybersecurity Introduction">
       <p>
-        Welcome to <strong>CyberSecure Chatbot</strong>, your quick guide to staying safe online.
+        Welcome to the <strong>CyberSecurity Chatbot</strong>, your quick guide to staying safe online.
         Ask anything, or use the preset questions below to learn best practices for passwords,
         device security, and what to do if you’re hacked.
       </p>
@@ -51,11 +57,23 @@
 
     <form id="chat-form" autocomplete="off" aria-label="Chat input">
       <input id="user-input" type="text" placeholder="Type your message…" required aria-label="Your message" />
-      <button type="button" id="micBtn">🎤</button>
+      
       <button type="submit">Send</button>
+
+     <button type="button" id="micBtn" aria-label="Voice Input">
+      <svg xmlns="http://www.w3.org/2000/svg" 
+          viewBox="0 0 24 24" 
+          fill="currentColor" 
+          width="20" height="20">
+        <circle cx="12" cy="12" r="11" fill="#60a5fa"/>
+        <path d="M12 16a4 4 0 004-4V9a4 4 0 10-8 0v3a4 4 0 004 4zm0 0v4m0 0H9m3 0h3"
+              stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
       <button type="button" id="clear-btn" aria-label="Clear chat">Clear</button>
     </form>
   </div>
 
-  <script src="app.js?v=16" defer></script>
+  <script src="app.js?v=7" defer></script>
 </body>

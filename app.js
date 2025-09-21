@@ -19,7 +19,7 @@ function showStatus(message, type = 'info') {
 }
 
 // =====================
-// Recording UI helpers (bullet-proof)
+// Recording UI helpers
 // =====================
 const DEFAULT_PLACEHOLDER = 'Type your message…';
 
@@ -34,8 +34,7 @@ function markInputRecording(on) {
     }
     input.placeholder = 'Recording…';
     input.classList.add('recording');
-    // Fresh transcript while speaking
-    input.value = '';
+    input.value = ''; // fresh transcript
   } else {
     const prev = input.dataset.prevPlaceholder || DEFAULT_PLACEHOLDER;
     input.placeholder = prev;
@@ -93,49 +92,23 @@ function startAssistantTyping() {
   }, 400);
 
   return {
-    stop() {
-      clearInterval(timer);
-      div.remove();
-    },
-    replaceWith(text) {
-      clearInterval(timer);
-      div.textContent = text;
-      chatEl.scrollTop = chatEl.scrollHeight;
-    }
+    stop() { clearInterval(timer); div.remove(); },
+    replaceWith(text) { clearInterval(timer); div.textContent = text; chatEl.scrollTop = chatEl.scrollHeight; }
   };
 }
 
 // =====================
-// TTS (forced English, Edge-hardened)
+// TTS (forced English)
 // =====================
-function getVoicesAsync() {
-  return new Promise((resolve) => {
-    const v = speechSynthesis.getVoices();
-    if (v && v.length) return resolve(v);
-    speechSynthesis.onvoiceschanged = () => resolve(speechSynthesis.getVoices());
-  });
-}
-function resumeIfPaused() {
-  try {
-    if (speechSynthesis.paused) speechSynthesis.resume();
-  } catch {}
-}
-
-// Speak using the browser's default voice (no manual selection)
 function speak(text, opts = {}) {
   if (!('speechSynthesis' in window) || !text?.trim()) return;
   try { speechSynthesis.cancel(); } catch {}
   const u = new SpeechSynthesisUtterance(text);
-  // Let the browser choose the voice; just set language to system default
-  u.lang = navigator.language || 'en-US';
+  u.lang = 'en-US'; // Force English voice
   if (opts.rate)  u.rate  = opts.rate;
   if (opts.pitch) u.pitch = opts.pitch;
-  // DO NOT assign u.voice — the browser will use its default
   speechSynthesis.speak(u);
 }
-
-
-// Preload voice list after any user interaction (some browsers require a gesture)
 window.addEventListener('click', () => {
   if ('speechSynthesis' in window) speechSynthesis.getVoices();
 }, { once: true });
@@ -162,7 +135,7 @@ async function sendMessageToServer(message) {
 }
 
 // =====================
-// Main send flow (with typing indicator "...")
+// Main send flow (Enter/Send triggers this)
 // =====================
 let sendLocked = false;
 
@@ -170,7 +143,7 @@ async function handleSubmitText(text) {
   if (sendLocked) return;
   sendLocked = true;
 
-  // If a previous mic session left the UI “recording…”, clear it now
+  // If a mic session left UI “recording…”, clear it now
   clearRecordingUI();
 
   input.value = '';
@@ -187,8 +160,7 @@ async function handleSubmitText(text) {
   try {
     const reply = await sendMessageToServer(text);
     typing.replaceWith(reply);
-    // Speak in English (force)
-    speak(reply);
+    speak(reply); // Speak bot reply in English
   } catch (err) {
     console.error(err);
     typing.replaceWith('Sorry—there was a problem reaching the server.');
@@ -200,9 +172,26 @@ async function handleSubmitText(text) {
   }
 }
 
-// Submit via Send button / Enter
+// Submit via button / Enter (guard against recording)
 form.addEventListener('submit', (e) => {
   e.preventDefault();
+  if (micState.isListening) {
+    showStatus('Still listening… click the mic to stop, then press Enter.', 'info');
+    return;
+  }
+  const text = input.value.trim();
+  if (!text) return;
+  handleSubmitText(text);
+});
+
+// Guarantee Enter == Send, regardless of focus (prevents Enter from clicking mic)
+form.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter') return;
+  e.preventDefault();
+  if (micState.isListening) {
+    showStatus('Still listening… click the mic to stop, then press Enter.', 'info');
+    return;
+  }
   const text = input.value.trim();
   if (!text) return;
   handleSubmitText(text);
@@ -226,12 +215,16 @@ clearBtn.addEventListener('click', () => {
 });
 
 // =====================
-// Speech Recognition (auto-send on end)
+// Speech Recognition (dictation only, continuous with auto-restart)
 // =====================
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-let recognition = null;
-let isListening = false;
-let startedByMic = false;
+
+const micState = {
+  recognition: null,
+  isListening: false,
+  restartTimer: null,
+  finalTranscript: ''
+};
 
 async function ensureMicPermission() {
   if (!navigator.mediaDevices?.getUserMedia) return true; // older browsers
@@ -245,79 +238,119 @@ async function ensureMicPermission() {
   }
 }
 
-function startListening() {
+function beginRecognition() {
   if (!SpeechRecognition) {
-    showStatus('Speech recognition not supported', 'error');
+    showStatus('Speech recognition not supported in this browser.', 'error');
     return;
   }
-  if (isListening) { stopListening(); return; }
 
-  try {
-    recognition = new SpeechRecognition();
-    recognition.continuous = false;
-    recognition.interimResults = true;
-    // Choose the language you speak: 'fr-FR' for French, 'en-US' for English, etc.
-    recognition.lang = 'fr-FR';
+  // Clean up old instance
+  if (micState.recognition) {
+    try { micState.recognition.onend = null; micState.recognition.stop(); } catch {}
+  }
 
-    recognition.onstart = () => {
-      isListening = true;
-      startedByMic = true;
-      micBtn.classList.add('recording');
-      markInputRecording(true);
-      showStatus('Listening... speak now!', 'info');
-    };
+  const r = new SpeechRecognition();
+  r.lang = 'en-US';           // Force English recognition
+  r.continuous = true;        // Keep listening across pauses
+  r.interimResults = true;
+  r.maxAlternatives = 1;
+  micState.recognition = r;
+  micState.finalTranscript = '';
 
-    recognition.onresult = (event) => {
-      let finalTranscript = '';
-      let interimTranscript = '';
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const res = event.results[i];
-        if (res.isFinal) finalTranscript += res[0].transcript;
-        else interimTranscript += res[0].transcript;
+  r.onstart = () => {
+    micState.isListening = true;
+    micBtn.classList.add('recording');
+    markInputRecording(true);
+    input.focus();
+
+    // Disable native validation while dictating (prevents “Please fill out this field”)
+    form.setAttribute('novalidate', '');
+    input._wasRequired = input.required;
+    input.required = false;
+
+    showStatus('Listening… speak normally.', 'info');
+  };
+
+  r.onresult = (event) => {
+    let interim = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const res = event.results[i];
+      if (res.isFinal) {
+        micState.finalTranscript = (micState.finalTranscript + ' ' + res[0].transcript)
+          .replace(/\s+/g, ' ').trim();
+      } else {
+        interim += res[0].transcript;
       }
-      input.value = (finalTranscript || interimTranscript).trim();
-    };
+    }
+    input.value = (micState.finalTranscript + (interim ? ' ' + interim : ''))
+      .replace(/\s+/g, ' ')
+      .trimStart();
+  };
 
-    recognition.onerror = (event) => {
-      console.error('Speech error:', event.error);
-      showStatus(`Speech error: ${event.error}`, 'error');
-      stopListening();
-    };
+  r.onerror = (e) => {
+    console.warn('Speech error:', e.error);
+    // Try to recover from benign errors
+    if (['no-speech','audio-capture','network','aborted'].includes(e.error)) {
+      scheduleRestart();
+      return;
+    }
+    showStatus(`Speech error: ${e.error}`, 'error');
+    hardStopListening();
+  };
 
-    recognition.onend = () => {
-      stopListening();
-      // Auto-send what you said (this will also speak the reply)
-      const text = input.value.trim();
-      if (startedByMic && text) handleSubmitText(text);
-      startedByMic = false;
-    };
+  r.onend = () => {
+    // Engine often ends after short silence; keep session alive if user still recording
+    if (micState.isListening) scheduleRestart();
+    else cleanupRecordingUI();
+  };
 
-    recognition.start();
-  } catch (error) {
-    console.error('Failed to start recognition:', error);
-    showStatus('Failed to start speech recognition', 'error');
+  try { r.start(); }
+  catch (err) {
+    console.error('recognition.start() failed', err);
+    scheduleRestart();
+  }
+
+  function scheduleRestart() {
+    clearTimeout(micState.restartTimer);
+    if (micState.isListening) micState.restartTimer = setTimeout(() => {
+      try { r.start(); }
+      catch (err) {
+        console.warn('restart failed, retrying', err);
+        scheduleRestart();
+      }
+    }, 150); // tiny gap keeps it seamless
   }
 }
 
-function stopListening() {
-  if (recognition) { try { recognition.stop(); } catch {} }
-  isListening = false;
+function hardStopListening() {
+  micState.isListening = false;
+  clearTimeout(micState.restartTimer);
+  try { micState.recognition && micState.recognition.stop(); } catch {}
+  cleanupRecordingUI();
+}
+
+function cleanupRecordingUI() {
   micBtn.classList.remove('recording');
   markInputRecording(false);
+  input.focus();
+
+  // Restore validation behavior
+  form.removeAttribute('novalidate');
+  if (input._wasRequired !== undefined) {
+    input.required = input._wasRequired;
+    delete input._wasRequired;
+  }
+  showStatus('Stopped listening. Press Enter to send.', 'info');
 }
 
-// Mic button click: immediate feedback + permission nudge + toggle
+// Mic button click: toggle listening; never auto-send; avoid grabbing Enter focus
 micBtn.addEventListener('click', async () => {
-  // Toggle off if already recording
-  if (micBtn.classList.contains('recording') || input.classList.contains('recording')) {
-    stopListening();
-    clearRecordingUI();
-    return;
-  }
+  micBtn.blur(); // prevent Enter from "clicking" mic
+  input.focus();
 
-  console.log('Mic button clicked');
-  micBtn.classList.add('recording');
-  markInputRecording(true);
+  // Toggle off if already recording
+  if (micState.isListening) { hardStopListening(); return; }
+
   showStatus('Requesting microphone…', 'info');
 
   if (location.protocol === 'file:') {
@@ -339,7 +372,7 @@ micBtn.addEventListener('click', async () => {
     return;
   }
 
-  startListening();
+  beginRecognition();
 });
 
 // =====================
