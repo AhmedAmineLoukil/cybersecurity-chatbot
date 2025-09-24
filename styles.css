@@ -3,7 +3,7 @@
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
-  background: #ffffff;
+  background: #f3f4f6;
   color: #1f2937;
   font-size: 18px;
   line-height: 1.6;
@@ -31,8 +31,6 @@ header {
 .title-chatbot {
   color: #6b7280;  /* medium gray (same as Cyber) */
 }
-
-.app { max-width: 820px; margin: 0 auto; padding: 16px; }
 
 /* Intro */
 .intro {
@@ -72,7 +70,7 @@ header {
 
 /* Chat area */
 .chat {
-  background:#f9fafb;
+  background:#f3f4f6;
   border-radius: 12px;
   padding: 14px;
   min-height: 50vh;
@@ -80,7 +78,7 @@ header {
   overflow-y:auto;
   display:flex;
   flex-direction:column;
-  border: 1px solid #d1d5db;
+  border: 1px solid #d1d5db; /* optional, keep light border */
   font-size: 17px;
 }
 .msg { padding: 12px 14px; margin: 8px 0; border-radius: 10px; line-height: 1.6; white-space: pre-wrap; max-width: 75%; }
@@ -109,10 +107,7 @@ header {
   background:#60a5fa;
   color:#ffffff;
 }
-#micBtn.recording {
-  background:#f87171;   /* light red when recording */
-  color:#fff;
-}
+
 
 /* Clear button */
 #clear-btn { background:#f87171; color:#fff; }
@@ -148,18 +143,27 @@ header {
 .sidebar {
   position: fixed;
   top: 0;
-  left: 20px;              /* gap from the window edge */
-  width: 260px;            /* wider sidebar */
+  left: 20px;
+  width: 260px;
   height: 100%;
-  background: #ffffff;
+  background: #f3f4f6;
   border-right: 1px solid #e5e7eb;
   padding: 16px;
   color: #1f2937;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* center its content vertically */
+}
+.sidebar-middle {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* center vertically */
 }
 
+/* Logout button fixed at bottom */
+.sidebar-bottom {
+  margin-top: auto;
+}
 .new-chat-btn {
   display: block;
   width: 100%;
@@ -215,6 +219,7 @@ header {
   background: #e5f0ff;
   border-color: #bfdbfe;
 }
+
 
 
 .app {
